@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.target=RatingMenu
+comment1.params=args
+comment1.target=void\ main(java.lang.String[])
+comment2.params=primaryStage
+comment2.target=void\ start(javafx.stage.Stage)
+comment3.params=label\ toggleGroup
+comment3.target=javafx.scene.layout.VBox\ createRatingVBox(java.lang.String,\ javafx.scene.control.ToggleGroup)
+comment4.params=
+comment4.target=void\ showThanksForRating()
+comment5.params=message
+comment5.target=void\ showAlert(java.lang.String)
+numComments=6
