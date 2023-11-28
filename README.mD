@@ -2,7 +2,7 @@
 
 ## Authors
 - Zach Paden
-- Micah
+- Micah Trent
 - Bronson Woods
 
 ## Project Title
