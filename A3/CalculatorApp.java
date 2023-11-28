@@ -10,7 +10,7 @@ public class CalculatorApp extends Application {
     public String lastOperation = "";       //  ---
     public double lastNumber = 0;
     public double result = 0;
-    public boolean clearDisplay = false;    /// ---
+    public boolean canClearDisplay = false;    /// ---
     public Label displayLabel;
 
     //  Main Method
@@ -57,6 +57,10 @@ public class CalculatorApp extends Application {
 
     //  The button runs this method will check the input string and run the appropriate method.
     public void handleButtonClick(String buttonLabel) {
+        if(!canClearDisplay){
+            resetAllValues();
+        }
+
         if (buttonLabel.matches("[0-9]")) {
             handleDigitInput(buttonLabel);  //  Number input
         } else {
@@ -103,7 +107,6 @@ public class CalculatorApp extends Application {
             //  If the last operation is not empty, perform the operation.
             performOperation();
             lastOperation = operation;  //  Update the last operation.
-            clearDisplay = true;    //FIX:  Possibly redudant?
         } 
         else {
             //  If the last operation is empty, perform the following code.
@@ -141,7 +144,6 @@ public class CalculatorApp extends Application {
             currentInput.setLength(0);  //  Erase the input field.
             currentInput.append(result);    //  Add the result to the input field.
             lastOperation = "";         //  Erase the last operation.
-            clearDisplay = true;    //  Toggle on
         }
     }
 
@@ -171,34 +173,30 @@ public class CalculatorApp extends Application {
     //  AC Method - This method clears everything.
     public void clearAll() {
         currentInput.setLength(0);  //  Clear display field.
-        lastOperation = ""; //  Clear last operation.
-        lastNumber = 0; //  Clear lat number.
-        result = 0; //  cleart the result.
-        clearDisplay = false;   //  Toggle off
-        //FIX: Need to reassign zero to display.
+        currentInput.append("0");   //  Set the display to zero.
+        updateDisplay();    //  Update the display
+        canClearDisplay = false;    //  Toggle off
     }
 
     //  This method updates the display of the calculator.
     public void updateDisplay() {
-        if (clearDisplay) {
-            //  If clearDisplay is on, set the display to currentInput and toggle off.
-            displayLabel.setText(currentInput.toString());
-            clearDisplay = false;
-        } else {
-            //  Set the display to currentInput and leave toggle off.
-            displayLabel.setText(currentInput.toString());
-        }
+        //  Set the display to currentInput
+        displayLabel.setText(currentInput.toString());
     }
 
     //  This method reports that an error occured.
     public void displayError() {
         currentInput.setLength(0);  //  Clear display
         currentInput.append("ERR"); //  Add "Err" to display.
+        updateDisplay();    //  Update the display
+        canClearDisplay = false;    //  Toggle off
+    }
 
-        //  Clear all relevant fields
-        lastOperation = "";
-        lastNumber = 0;
-        result = 0;
-        clearDisplay = true;    //  Toggle on
+    public void resetAllValues(){
+        lastOperation = ""; //  Clear last operation.
+        lastNumber = 0; //  Clear last number.
+        result = 0; //  cleart the result.
+        currentInput.setLength(0);  //  Clear display field.
+        canClearDisplay = true; //  Toggle on
     }
 }
