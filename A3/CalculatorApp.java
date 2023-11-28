@@ -5,16 +5,22 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.*;
 public class CalculatorApp extends Application {
+    //  Variables
     public StringBuilder currentInput = new StringBuilder();
-    public String lastOperation = "";
+    public String lastOperation = "";       //  ---
     public double lastNumber = 0;
     public double result = 0;
-    public boolean clearDisplay = false;
+    public boolean clearDisplay = false;    /// ---
     public Label displayLabel;
+
+    //  Main Method
     public static void main(String[] args) {
         launch(args);
     }
+
+    //  Start method - This method acts as the driver for the program.
     public void start(Stage primaryStage) {
+        //  Set up the structure of the Calculator Gui, the window name, and the button/field names.
         primaryStage.setTitle("Calculator");
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -31,133 +37,168 @@ public class CalculatorApp extends Application {
                 {"0", ".", "=", "+"},
                 {"+/-", "C", "AC", "☺"}
         };
+
+        //  Set the value for each button.
         for (int i = 0; i < buttonLabels.length; i++) {
             for (int j = 0; j < buttonLabels[i].length; j++) {
-                String label = buttonLabels[i][j];
-                Button button = new Button(label);
+                String label = buttonLabels[i][j];  //  Cache button name
+                Button button = new Button(label);  //  Create button object with label as name.
                 button.setMinSize(40, 40);
-                button.setOnAction(e -> handleButtonClick(label));
-                grid.add(button, j, i + 1);
+                button.setOnAction(e -> handleButtonClick(label));  //  Add action to the button.  When the button is clicked, it will use the label (button name) to determine action.
+                grid.add(button, j, i + 1); //  Add the button to the program.
             }
         }
+
+        //  Create the scene
         Scene scene = new Scene(grid, 222, 333);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
+    //  The button runs this method will check the input string and run the appropriate method.
     public void handleButtonClick(String buttonLabel) {
         if (buttonLabel.matches("[0-9]")) {
-            handleDigitInput(buttonLabel);
+            handleDigitInput(buttonLabel);  //  Number input
         } else {
             switch (buttonLabel) {
                 case "+/-":
-                    changeSign();
+                    changeSign();   //  Toggle positive and negative
                     break;
                 case ".":
-                    handleDecimalPoint();
+                    handleDecimalPoint();   //  Add decimal point
                     break;
                 case "=":
-                    performOperation();
+                    performOperation(); //  Calculate result
                     break;
                 case "C":
-                    clearLast();
+                    clearLast();    //  Clear the last action/number/operation.
                     break;
                 case "AC":
-                    clearAll();
+                    clearAll(); //  Clear all
                     break;
                 default:
-                    handleOperation(buttonLabel);
+                    handleOperation(buttonLabel);   //  Handles extraneous circumstances.
             }
         }
-        updateDisplay();
+        updateDisplay();    //  Update the result
     }
+
+    //  This method will add digits to the operation.  The max character size is 8.
     public void handleDigitInput(String digit) {
         if (currentInput.length() < 8) {
             currentInput.append(digit);
         }
     }
+
+    //  This method adds a decimal point to a given number if it does not already exist.
     public void handleDecimalPoint() {
         if (!currentInput.toString().contains(".")) {
             currentInput.append(".");
         }
     }
+
+    //  This method handles extraneous circumstances.  Perform arithmetic operations if the last operation is not empty or skip otherwise.
     public void handleOperation(String operation) {
         if (!lastOperation.isEmpty()) {
+            //  If the last operation is not empty, perform the operation.
             performOperation();
-            lastOperation = operation;
-            clearDisplay = true;
+            lastOperation = operation;  //  Update the last operation.
+            clearDisplay = true;    //FIX:  Possibly redudant?
         } 
         else {
-            lastOperation = operation;
-            lastNumber = Double.parseDouble(currentInput.toString());
-            currentInput.setLength(0);
+            //  If the last operation is empty, perform the following code.
+            lastOperation = operation;  //  Update the last operation.
+            lastNumber = Double.parseDouble(currentInput.toString());   //  Convert the currentInput from StringBuilder to double.  Store as lastNumber
+            currentInput.setLength(0);  //  Clear the display field.
         }
     }
+
+    //  Perform addition, subtraction, multiplication, or division on the provided numbers based on the operation character.
     public void performOperation() {
         if (!currentInput.toString().isEmpty()) {
-            double currentNumber = Double.parseDouble(currentInput.toString());
+            //  If the input is not empty, the following code will run.
+            double currentNumber = Double.parseDouble(currentInput.toString()); //  Convert the StringBuilder value to a String, then convert from String to double.
             switch (lastOperation) {
                 case "+":
-                    result = lastNumber + currentNumber;
+                    result = lastNumber + currentNumber;    //  Add numbers
                     break;
                 case "-":
-                    result = lastNumber - currentNumber;
+                    result = lastNumber - currentNumber;    //  Subtract numbers
                     break;
                 case "*":
-                    result = lastNumber * currentNumber;
+                    result = lastNumber * currentNumber;    //  Multiply numbers
                     break;
                 case "/":
                     if (currentNumber != 0) {
-                        result = lastNumber / currentNumber;
+                        result = lastNumber / currentNumber;    //  If the denominator is not equal to zero, then divide.
                     } else {
-                        displayError();
+                        displayError(); //  Display error if dividing by zero.
                         return;
                     }
                     break;
             }
-            lastNumber = result;
-            currentInput.setLength(0);
-            currentInput.append(result);
-            lastOperation = "";
-            clearDisplay = true;
+            lastNumber = result;    //  Set the result to the new lastNumber.
+            currentInput.setLength(0);  //  Erase the input field.
+            currentInput.append(result);    //  Add the result to the input field.
+            lastOperation = "";         //  Erase the last operation.
+            clearDisplay = true;    //  Toggle on
         }
     }
+
+    //  Toggle sign between positive and negative for numbers.
     public void changeSign() {
         if (!currentInput.toString().isEmpty() && !currentInput.toString().equals("0")) {
-            double number = Double.parseDouble(currentInput.toString());
-            number *= -1;
-            currentInput.setLength(0);
-            currentInput.append(number);
+            //  Only run the following code when the input is not empty and not equal to zero.
+            double number = Double.parseDouble(currentInput.toString());    //  Convert to double
+            number *= -1;   //  Multiply by -1.  Thus, positive numbers become negative and negative numbers become positive.
+            currentInput.setLength(0);  //  Clear result field.
+            currentInput.append(number);    //  Add number to result field.
         }
     }
+
+    //  Clear the last character or operation from the display.
     public void clearLast() {
         if (!currentInput.toString().isEmpty()) {
+            //  If the currentInput is not empty, then clear the last character.
             currentInput.setLength(currentInput.length() - 1);
         } else if (!lastOperation.isEmpty()) {
+            //  Otherwise, if the last operation is not empty, set the input to the last number.
             lastOperation = "";
-            currentInput.append(Double.toString(lastNumber));
+            currentInput.append(Double.toString(lastNumber));   //FIX: C issue here.
         }
     }
+
+    //  AC Method - This method clears everything.
     public void clearAll() {
-        currentInput.setLength(0);
-        lastOperation = "";
-        lastNumber = 0;
-        result = 0;
-        clearDisplay = false;
+        currentInput.setLength(0);  //  Clear display field.
+        lastOperation = ""; //  Clear last operation.
+        lastNumber = 0; //  Clear lat number.
+        result = 0; //  cleart the result.
+        clearDisplay = false;   //  Toggle off
+        //FIX: Need to reassign zero to display.
     }
+
+    //  This method updates the display of the calculator.
     public void updateDisplay() {
         if (clearDisplay) {
+            //  If clearDisplay is on, set the display to currentInput and toggle off.
             displayLabel.setText(currentInput.toString());
             clearDisplay = false;
         } else {
+            //  Set the display to currentInput and leave toggle off.
             displayLabel.setText(currentInput.toString());
         }
     }
+
+    //  This method reports that an error occured.
     public void displayError() {
-        currentInput.setLength(0);
-        currentInput.append("ERR");
+        currentInput.setLength(0);  //  Clear display
+        currentInput.append("ERR"); //  Add "Err" to display.
+
+        //  Clear all relevant fields
         lastOperation = "";
         lastNumber = 0;
         result = 0;
-        clearDisplay = true;
+        clearDisplay = true;    //  Toggle on
     }
 }
