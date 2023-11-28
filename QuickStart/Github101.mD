@@ -69,7 +69,7 @@ Pull requests let you propose changes to the main branch. They are central to co
 
 After review, merge your feature branch into the main branch.
 
-![Merge and Pull Requests](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.simplilearn.com%2Fpull-vs-merge-request-definition-differences-benefits-article&psig=AOvVaw1sUJ7rQi7bRBgspCGE0kwe&ust=1701289949084000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCPCiuIrF54IDFQAAAAAdAAAAABAE)
+![Merge and Pull Requests](Github101.mD/img/pull_request_vs_merge_request.png)
 
 ### Detailed Steps:
 
