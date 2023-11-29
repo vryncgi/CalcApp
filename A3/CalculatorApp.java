@@ -10,7 +10,7 @@ public class CalculatorApp extends Application {
     public String lastOperation = "";       //  ---
     public double lastNumber = 0;
     public double result = 0;
-    public boolean canClearDisplay = false;    /// ---
+    public boolean canClearDisplay = false;
     public Label displayLabel;
 
     //  Main Method
@@ -84,6 +84,7 @@ public class CalculatorApp extends Application {
                     handleOperation(buttonLabel);   //  Handles extraneous circumstances.
             }
         }
+        checkForError();    //  Check if the output exceeds 8 characters.
         updateDisplay();    //  Update the result
     }
 
@@ -198,5 +199,18 @@ public class CalculatorApp extends Application {
         result = 0; //  cleart the result.
         currentInput.setLength(0);  //  Clear display field.
         canClearDisplay = true; //  Toggle on
+    }
+
+    //  If the output exceeds 8 characters, display "ERR" for error.
+    public void checkForError(){
+        int maxDigits = 8;  //  Only 8 digits are allowed in the output.
+        int containsDecimal = currentInput.indexOf(".") > -1 ? 1 : 0;   //  If a decimal exists, set this variable to 1, otherwise set to 0.
+        int containsNegativeSign = currentInput.indexOf("-") > -1 ? 1 : 0;   //  If a negative sign exists, set this variable to 1, otherwise set to 0.
+
+        //  If the output exceeds 8 digits, throw an error.  Since the length of the characters in the string are
+        //  being measured, decimals and negative signs are ignored when determing the number of digits in the output.
+        if(currentInput.length() > (maxDigits + containsDecimal + containsNegativeSign)){
+            displayError(); //  An error is shown in the ouput.
+        }
     }
 }
