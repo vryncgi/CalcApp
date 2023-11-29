@@ -84,6 +84,7 @@ public class CalculatorApp extends Application {
                     handleOperation(buttonLabel);   //  Handles extraneous circumstances.
             }
         }
+        removeExcessiveDecimalPlaces(); //  Check the output of operations for decimal place length.
         checkForError();    //  Check if the output exceeds 8 characters.
         updateDisplay();    //  Update the result
     }
@@ -212,5 +213,34 @@ public class CalculatorApp extends Application {
         if(currentInput.length() > (maxDigits + containsDecimal + containsNegativeSign)){
             displayError(); //  An error is shown in the ouput.
         }
+    }
+
+    //  This method ensures that all output only has 3 decimal places maximum.
+    public void removeExcessiveDecimalPlaces(){
+        //  If the result is raised or lowered to a power of 10, first ensure that it does not exceed the digit limit.
+        if(currentInput.indexOf("E") > -1){
+            checkForError();
+
+            //  If an error is reported, exit now.
+            if(!canClearDisplay){
+                return;
+            }
+        }
+
+        //  Perform calculations for the decimal places.
+        int decimalIndex = currentInput.indexOf(".");   //  This integer stores the index of the decimal place.
+        int length = currentInput.length() - 1; //  This integer stores the length of the output.
+        int maxDecimalPlaces = 3;   //  Only 3 digits can exist after the decimal place.
+        
+        int numDecimalPlaces = length - decimalIndex;   //  This integer stores the current number of decimal places.
+        int numDecimalPlacesToRemove = numDecimalPlaces - maxDecimalPlaces; //  The number of decimal places to remove.
+
+        //  If the result is negative or no decimal exists, exit.
+        if(numDecimalPlacesToRemove < 0 || decimalIndex < 0){
+            return;
+        }
+
+        //  Shorten the output so that there is a max of 3 decimal places.
+        currentInput.setLength(length - numDecimalPlacesToRemove + 1);
     }
 }
